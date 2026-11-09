@@ -1,26 +1,30 @@
 # Compass
-A personal coursework log for assignments, deadlines and individual scores. The first release accepts manual entries and Compass JSON backups. Use one browser tab for editing. The browser stores the log on this device and origin. Export a copy to move between devices.
+I use Compass to keep my assignments, deadlines and individual scores in one place. I edit in one browser tab and export a JSON backup when I want to move my records to another device.
 
-## Run locally
-From the repository root, run `python3 -m http.server 8000` and open http://localhost:8000/docs/. No install or build step is needed.
+## How I run it
+I run `python3 -m http.server 8000` from the repository root and open http://localhost:8000/docs/. I can edit the site without installing dependencies or running a build.
 
-## Publish
-In GitHub Settings → Pages select **Deploy from a branch**, **main**, **/docs**, then Save. Use the URL GitHub reports after deployment. Commit only source and synthetic examples. Download personal backups outside the repository.
+## How I publish it
+In GitHub Settings → Pages, I choose **Deploy from a branch**, select **main** and **/docs**, and save. I use the URL GitHub provides after deployment. I keep my personal backups outside this repository and commit only source files and fictional examples.
 
-## Edit
-- docs/index.html contains the form, section order and labels.
-- docs/style.css controls typography, spacing and mobile layout.
-- docs/app.js handles rendering, editing, device storage and file import/export.
-- docs/records.js validates the backup version, fields, dates, and grade states.
-- docs/example.json contains two fictional records. Import it twice to check duplicate handling.
+## Where I make changes
+- I edit the form and its labels in `docs/index.html`.
+- I adjust typography, spacing and mobile layout in `docs/style.css`.
+- I edit the assignment list, browser storage and import/export behavior in `docs/app.js`.
+- I change record validation in `docs/records.js`.
+- I can import `docs/example.json` twice to check how Compass handles duplicate IDs.
 
-School dates use YYYY-MM-DD in Asia/Taipei, with no time of day. A graded zero is numeric. Missing, excused and ungraded entries have a null score. “Complete” tracks your work separately from its grade. Imported IDs preserve the original source label. Existing IDs always win, so use Edit for corrections. Import validates the entire file before saving. Clearing site data removes the log. Other apps hosted on the same origin share access to browser storage.
+I enter school dates as YYYY-MM-DD in Taipei local time. I can record a graded zero. For missing, excused or ungraded work, I leave the score empty. I mark work complete separately from its grade.
 
-## Engineering journal · 9 November 2026
-Justin proposed the project and chose GitHub Pages. Codex implemented this first release. Plain browser modules keep the site editable and publishable without a build. The original blueprint proposed React, TypeScript and SQLite. Revisit that stack when the planner or an authorized multi-device integration needs it.
+When I import a backup, Compass checks every record before saving and preserves the source label. If an ID already exists, I keep the current entry and use Edit to correct it. I export before clearing site data because that would erase my log. Other apps on the same origin can access this browser storage.
 
-The home screen opens on assignments. The key interaction is finding a due date and correcting an entry. Design reference: https://www.gov.uk/guidance/government-design-principles
-Validation lives in a single module. Code review reference: https://google.github.io/eng-practices/review/reviewer/looking-for.html
+## My engineering journal · 9 November 2026
+I proposed Compass and chose GitHub Pages. I can edit the first release as plain browser modules. My original blueprint considered React, TypeScript and SQLite. I can revisit those choices when I need a planner or multi-device access.
 
-## What comes next
-Gather one verified course grading policy and a hand-calculated example before adding course averages. Alma ingestion depends on a permitted data source. Drive currently holds project documentation and release files. Automatic backup, scheduling and ChatGPT integration belong to later milestones.
+I want to find a due date or correct a score as soon as I open the dashboard. That’s why my assignments appear first. I keep validation in one module so I can follow what happens to a record before it’s saved.
+
+Design reference: https://www.gov.uk/guidance/government-design-principles
+Code review reference: https://google.github.io/eng-practices/review/reviewer/looking-for.html
+
+## What I’ll do next
+I’ll verify one course grading policy and work through an example by hand before adding course averages. I’ll need a permitted data source for Alma. For now I keep documentation and release files in Drive. I’ve left automatic backups, scheduling and a study assistant for later milestones.

@@ -15,7 +15,7 @@ function encode(records) {
 function render(records) {
   const list = document.querySelector('#records');
   list.replaceChildren();
-  if (!records.length) list.textContent = 'No assignments yet. Add your first one below.';
+  if (!records.length) list.textContent = 'I haven’t added any assignments yet.';
   for (const item of records.sort((a,b)=>(a.due || 'z').localeCompare(b.due || 'z'))) {
     const row = document.createElement('article');
     const title = document.createElement('strong');
@@ -31,7 +31,7 @@ function render(records) {
       for (const name of ['title','course','due','status','score']) fields[name].value = item[name] ?? '';
       fields.done.checked = item.done;
       fields.score.disabled = item.status !== 'Graded';
-      document.querySelector('#editor').textContent = 'Edit assignment';
+      document.querySelector('#editor').textContent = 'Edit my assignment';
       fields.title.focus();
     };
     row.append(title, edit);
@@ -48,7 +48,7 @@ function save(records) {
 form.onreset = () => {
   editing = null;
   fields.score.disabled = true;
-  document.querySelector('#editor').textContent = 'Add an assignment';
+  document.querySelector('#editor').textContent = 'Add my assignment';
 };
 fields.status.onchange = () => {
   fields.score.disabled = fields.status.value !== 'Graded';
@@ -64,7 +64,7 @@ form.onsubmit = event => {
       status:fields.status.value, score:fields.score.disabled ? null : fields.score.valueAsNumber, done:fields.done.checked});
     save([...records.filter(row => row.id !== item.id), item]);
     form.reset();
-    message.textContent = 'Assignment saved on this device.';
+    message.textContent = 'My assignment is saved on this device.';
   } catch (error) { message.textContent = error.message; }
 };
 document.querySelector('#export').onclick = () => {
@@ -88,9 +88,9 @@ document.querySelector('#import').onchange = async event => {
       seen.add(item.id);
       return true;
     });
-    if (added.length && !confirm('Add ' + added.length + ' assignments from this backup?')) return;
+    if (added.length && !confirm('Add ' + added.length + ' assignments to my coursework?')) return;
     save([...records,...added]);
-    message.textContent = added.length + ' added, ' + (incoming.length-added.length) + ' existing IDs skipped.';
+    message.textContent =  'My import added ' + added.length + ' records and skipped ' + (incoming.length-added.length) + ' existing IDs.';
   } catch (error) { message.textContent = error.message; }
   finally { input.value = ''; }
 };
