@@ -1,14 +1,19 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Compass · Coursework</title><link rel="stylesheet" href="style.css"><script type="module" src="app.js"></script></head>
 <body><header>Compass <span>Coursework</span></header><main>
-<h1>Coursework</h1><p>Assignments, deadlines and scores. Saved on this device.</p>
-<section><h2>Overview</h2><p id="overview"></p><div id="courses"></div></section>
-<section><h2>Assignments</h2><div class="filters"><label>Course<select id="course-filter"><option value="">All courses</option></select></label><label>Show<select id="work-filter"><option value="all">All work</option><option value="open">Open</option><option value="overdue">Overdue</option><option value="done">Complete</option></select></label><label>Search<input id="search" type="search" placeholder="Assignment or course"></label></div><div id="records"></div></section>
+<h1>Homework</h1><p>Assignments, deadlines and scores. Saved on this device.</p>
+<p id="overview"></p>
+<section class="study"><h2>What fits now?</h2>
+<form id="suggest"><label>Available minutes<input id="budget" type="number" min="1" max="480" value="30" required></label><button>Suggest work</button></form>
+<p class="hint">Suggestions try the earliest deadlines first, then add work that fits the remaining time. Change the checkboxes to adjust the selection. Estimates include the whole assignment.</p><p id="plan-status" role="status">Add a time estimate to an assignment to include it here.</p><div id="plan"></div></section>
+<section><h2>Assignments</h2><div class="filters"><label>Course<select id="course-filter"><option value="">All courses</option></select></label><label>Show<select id="work-filter"><option value="open">Open</option><option value="all">All work</option><option value="today">Due today</option><option value="soon">Next 7 days</option><option value="overdue">Overdue</option><option value="done">Complete</option></select></label><label>Search<input id="search" type="search" placeholder="Assignment or course"></label></div><div id="records"></div></section>
 <section><h2 id="editor">Add assignment</h2><form id="entry">
-<label>Course<input name="course" required></label><label>Assignment<input name="title" required></label><label>Due date<input type="date" name="due"></label>
+<label>Course<input name="course" list="course-names" required><datalist id="course-names"></datalist></label><label>Assignment<input name="title" required></label><label>Due date<input type="date" name="due"></label>
+<label>Estimated minutes<input name="minutes" type="number" min="1" max="480" step="1"></label><label>First step<input name="firstStep" maxlength="300" placeholder="Open worksheet and attempt question 1"></label>
 <label>Grade status<select name="status"><option>Ungraded</option><option>Graded</option><option>Missing</option><option>Excused</option></select></label>
 <label>Score (%)<input name="score" type="number" min="0" max="100" step="any" disabled></label>
 <label><input type="checkbox" name="done"> Work complete</label>
 <button>Save assignment</button><button type="reset">Clear form</button></form></section>
+<details><summary>Course scores</summary><div id="courses"></div></details>
 <section><h2>Backup</h2><p>Export a copy before clearing browser data or switching devices.</p><button id="export">Export JSON</button> <label class="file">Import JSON <input type="file" id="import" accept=".json,application/json"></label></section>
 <p id="message" role="status"></p></main></body></html>

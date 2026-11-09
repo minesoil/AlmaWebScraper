@@ -1,10 +1,11 @@
-import {validate, unpack, schoolDate, courseSummaries, matchesFilters} from './records.js';
+import {validate, unpack, schoolDate, courseSummaries, matchesFilters, suggestWork} from './records.js';
 
 const key = 'compass.coursework.v1';
 const form = document.querySelector('#entry');
 const fields = form.elements;
 const message = document.querySelector('#message');
 let editing = null;
+let planIds = [];
 function read() {
   const data = localStorage.getItem(key);
   return data === null ? [] : unpack(data);
@@ -22,6 +23,8 @@ function render(records) {
     courseFilter.add(new Option(course, course));
   }
   courseFilter.value = selected;
+  document.querySelector('#course-names').replaceChildren(...[...new Set(records.map(item => item.course))].sort().map(course => new Option(course, course)));
+  renderPlan(records);
   const today = schoolDate();
   const open = records.filter(item => !item.done);
   const overdue = open.filter(item => item.due && item.due < today);
@@ -43,13 +46,13 @@ function render(records) {
     title.textContent = item.title;
     const detail = document.createElement('small');
     const grade = item.status === 'Graded' ? item.score + '%' : item.status;
-    detail.textContent = [item.course, item.due ? item.due + (!item.done && item.due < today ? ' · Overdue' : '') : 'No due date', grade, item.done ? 'Complete' : 'Open', item.source].join(' · ');
+    detail.textContent = [item.course, item.due ? item.due + (!item.done && item.due < today ? ' · Overdue' : '') : 'No due date', grade, item.done ? 'Complete' : 'Open', item.source, item.minutes ? item.minutes + ' min estimated' : 'No estimate', item.firstStep || ''].filter(Boolean).join(' · ');
     title.append(detail);
     const edit = document.createElement('button');
     edit.textContent = 'Edit';
     edit.onclick = () => {
       editing = item.id;
-      for (const name of ['title','course','due','status','score']) fields[name].value = item[name] ?? '';
+      for (const name of ['title','course','due','status','score','minutes','firstStep']) fields[name].value = item[name] ?? '';
       fields.done.checked = item.done;
       fields.score.disabled = item.status !== 'Graded';
       fields.score.required = !fields.score.disabled;
@@ -105,6 +108,7 @@ form.onsubmit = event => {
     const old = records.find(item => item.id === editing);
     const item = validate({id:editing ?? crypto.randomUUID(), source:old?.source ?? 'Manual entry',
       course:fields.course.value.trim(), title:fields.title.value.trim(), due:fields.due.value,
+      minutes:fields.minutes.value === '' ? null : fields.minutes.valueAsNumber, firstStep:fields.firstStep.value.trim(),
       status:fields.status.value, score:fields.score.disabled ? null : fields.score.valueAsNumber, done:fields.done.checked});
     save([...records.filter(row => row.id !== item.id), item]);
     form.reset();
@@ -144,3 +148,47 @@ for (const id of ['course-filter', 'work-filter', 'search']) {
 }
 window.addEventListener('storage', refresh);
 refresh();
+
+
+function renderPlan(records) {
+  const panel = document.querySelector('#plan');
+  panel.replaceChildren();
+  const chosen = records.filter(item => planIds.includes(item.id) && !item.done);
+  planIds = chosen.map(item => item.id);
+  const total = chosen.reduce((sum, item) => sum + item.minutes, 0);
+  const budget = Number(document.querySelector('#budget').value);
+  const unknown = records.filter(item => !item.done && !item.minutes).length;
+  const status = document.querySelector('#plan-status');
+  status.textContent = total + ' / ' + budget + ' minutes selected.' +
+    (total > budget ? ' Over budget — reduce the selection or adjust estimates.' : '') +
+    (unknown ? ' ' + unknown + ' open assignments need estimates.' : '');
+  for (const item of records.filter(item => !item.done && item.minutes)
+      .sort((a,b) => (a.due || '9999').localeCompare(b.due || '9999'))) {
+    const row = document.createElement('article');
+    const label = document.createElement('label');
+    const check = document.createElement('input');
+    check.type = 'checkbox';
+    check.checked = planIds.includes(item.id);
+    check.onchange = () => {
+      planIds = check.checked ? [...planIds, item.id] : planIds.filter(id => id !== item.id);
+      renderPlan(read());
+    };
+    label.append(check, document.createTextNode(' ' + item.title + ' · ' + item.minutes + ' min'));
+    const reason = document.createElement('small');
+    reason.textContent = item.course + ' · ' + (item.due ? 'Due ' + item.due : 'No deadline') +
+      (item.firstStep ? ' · Start with ' + item.firstStep : '');
+    label.append(reason);
+    row.append(label);
+    panel.append(row);
+  }
+}
+document.querySelector('#suggest').onsubmit = event => {
+  event.preventDefault();
+  try {
+    planIds = suggestWork(read(), Number(document.querySelector('#budget').value));
+    renderPlan(read());
+  } catch (error) { document.querySelector('#plan-status').textContent = error.message; }
+};
+document.querySelector('#budget').oninput = () => {
+  try { renderPlan(read()); } catch (error) { message.textContent = error.message; }
+};

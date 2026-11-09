@@ -19,3 +19,11 @@ button[type=reset],article button {background:transparent;color:#174d46}
 .filters {display:grid;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));gap:1rem;margin-bottom:1rem}
 .actions {display:flex;flex-wrap:wrap;gap:.4rem}
 @media(max-width:600px) {article {grid-template-columns:1fr}.actions button {min-height:44px}}
+
+h1 {font-size:2.4rem;margin:.6rem 0}
+section {margin:1rem 0;padding:.6rem 0}
+.study form {display:flex;align-items:end;gap:.7rem;flex-wrap:wrap}
+.study input[type=number] {width:8rem}
+summary {cursor:pointer;padding:.8rem 0}
+:focus-visible {outline:3px solid #b66b26;outline-offset:3px}
+article label {display:block}

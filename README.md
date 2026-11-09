@@ -39,3 +39,14 @@ I’ll verify one course grading policy and work through a sample by hand before
 
 Design reference — https://www.gov.uk/guidance/government-design-principles
 Code review reference — https://google.github.io/eng-practices/review/reviewer/looking-for.html
+
+## Homework update
+I chose homework organization as the main job, a compact layout, and suggestions I can adjust.
+
+The default list shows open assignments. Due today follows the Taipei calendar. Next 7 days includes today and the following six dates. Course scores are under a collapsible section.
+
+Each assignment can include estimated minutes and a concrete first step. Older records stay usable and show no estimate until edited. These fields travel with JSON backups.
+
+“What fits now?” accepts 1–480 minutes. Suggestions consider unfinished assignments with estimates, ordered by due date, then shorter estimates and stable IDs. The selection includes each whole assignment that fits the remaining time. An earlier long assignment may be skipped when it cannot fit. Checkboxes allow manual changes, with an over-budget message when needed. Selections are temporary and can be regenerated after a reload.
+
+Checks covered previous backup records, invalid estimates, completed work, missing estimates, deadline order, daily and weekly boundaries, and budget limits from 1–90 minutes. Full browser testing remains pending. The time estimates are user-entered. Learning from actual session durations is a future experiment.

@@ -20,12 +20,19 @@ export function validate(record) {
       new Date(record.due).toISOString().slice(0,10) !== record.due))) {
     throw new Error('Enter a valid due date.');
   }
+  if (record.minutes !== undefined && record.minutes !== null &&
+      (!Number.isInteger(record.minutes) || record.minutes < 1 || record.minutes > 480)) {
+    throw new Error('Estimate must be a whole number from 1 to 480 minutes.');
+  }
+  if (record.firstStep !== undefined && (typeof record.firstStep !== 'string' || record.firstStep.length > 300)) {
+    throw new Error('First step must be text up to 300 characters.');
+  }
   return record;
 }
 
 export function unpack(text) {
   const data = JSON.parse(text);
-  if (data.version !== 1 || !Array.isArray(data.records)) throw new Error('Choose a Compass version 1 backup.');
+  if (!data || data.version !== 1 || !Array.isArray(data.records)) throw new Error('Choose a Compass version 1 backup.');
   return data.records.map(validate);
 }
 
@@ -40,6 +47,10 @@ export function schoolDate(now = new Date()) {
 
 export function matchesFilters(record, filters, today) {
   if (filters.course && record.course !== filters.course) return false;
+  if (filters.work === 'today' && (record.done || record.due !== today)) return false;
+  const weekEnd = new Date(today + 'T00:00:00Z');
+  weekEnd.setUTCDate(weekEnd.getUTCDate() + 6);
+  if (filters.work === 'soon' && (record.done || !record.due || record.due < today || record.due > weekEnd.toISOString().slice(0,10))) return false;
   if (filters.work === 'open' && record.done) return false;
   if (filters.work === 'done' && !record.done) return false;
   if (filters.work === 'overdue' && (record.done || !record.due || record.due >= today)) return false;
@@ -53,4 +64,23 @@ export function courseSummaries(records) {
     return {course, open:items.filter(record => !record.done).length,
       graded:scores.length, low:Math.min(...scores), high:Math.max(...scores)};
   });
+}
+
+
+export function suggestWork(records, budget) {
+  if (!Number.isInteger(budget) || budget < 1 || budget > 480) {
+    throw new Error('Choose 1 to 480 available minutes.');
+  }
+  const candidates = records.filter(item => !item.done && Number.isInteger(item.minutes))
+    .sort((a,b) => (a.due || '9999-12-31').localeCompare(b.due || '9999-12-31') ||
+      a.minutes - b.minutes || a.id.localeCompare(b.id));
+  let remaining = budget;
+  const selected = [];
+  for (const item of candidates) {
+    if (item.minutes <= remaining) {
+      selected.push(item.id);
+      remaining -= item.minutes;
+    }
+  }
+  return selected;
 }
