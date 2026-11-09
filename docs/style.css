@@ -1,0 +1,17 @@
+:root {font-family:system-ui,sans-serif;color:#182f32;background:#f7f6ef}
+body {margin:0}
+header,main {max-width:56rem;margin:auto;padding:1.2rem}
+header {border-bottom:2px solid #345b56;font-family:Georgia,serif;font-size:1.6rem}
+header span {font: .9rem system-ui; margin-left:1rem}
+h1,h2 {font-family:Georgia,serif;font-weight:normal}
+h1 {font-size:clamp(2.8rem,7vw,4.6rem);margin:1rem 0}
+section {border-top:1px solid #b9c4b8;padding:1rem 0;margin:1.5rem 0}
+article {display:grid;grid-template-columns:1fr auto;align-items:center;padding:.8rem 0;border-bottom:1px solid #d4d9cd;gap:.4rem}
+article small {display:block;margin-top:.3rem;color:#3e5554}
+form {display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:1rem}
+label {display:grid;gap:.4rem;align-content:center}
+label:has([type=checkbox]),.file {display:inline-block}
+input,select,button {font:inherit;padding:.55rem;border:1px solid #879b91;border-radius:3px;max-width:100%;box-sizing:border-box}
+button {cursor:pointer;background:#174d46;color:white}
+button[type=reset],article button {background:transparent;color:#174d46}
+#message {position:sticky;bottom:0;background:#f7f6ef;font-weight:bold;padding:.5rem}

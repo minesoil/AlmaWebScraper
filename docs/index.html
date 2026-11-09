@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Compass · Coursework</title><link rel="stylesheet" href="style.css"><script type="module" src="app.js"></script></head>
+<body><header>Compass <span>Student workspace</span></header><main>
+<h1>Coursework</h1><p>Track assignments and individual scores on this device. Dates follow the school calendar in Taipei.</p>
+<section><h2>Assignments</h2><div id="records"></div></section>
+<section><h2 id="editor">Add an assignment</h2><form id="entry">
+<label>Course<input name="course" required></label><label>Assignment<input name="title" required></label><label>Due date<input type="date" name="due"></label>
+<label>Grade status<select name="status"><option>Ungraded</option><option>Graded</option><option>Missing</option><option>Excused</option></select></label>
+<label>Score (%)<input name="score" type="number" min="0" max="100" step="any" disabled></label>
+<label><input type="checkbox" name="done"> Work complete</label>
+<button>Save assignment</button><button type="reset">Clear form</button></form></section>
+<section><h2>Backup</h2><p>Export a copy before clearing browser data. Import adds records with new IDs and keeps existing entries.</p><button id="export">Export JSON</button> <label class="file">Import JSON <input type="file" id="import" accept=".json,application/json"></label></section>
+<p id="message" role="status"></p></main></body></html>
