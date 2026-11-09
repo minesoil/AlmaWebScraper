@@ -15,5 +15,19 @@
 <label><input type="checkbox" name="done"> Work complete</label>
 <button>Save assignment</button><button type="reset">Clear form</button></form></section>
 <details><summary>Course scores</summary><div id="courses"></div></details>
+<section id="study-hub"><h2>Study hub</h2>
+<details><summary>Google Drive setup</summary>
+<p>Use a Google OAuth web client ID and the link to a private study folder. Setup stays on this device.</p>
+<p>Google will request read-only file metadata access across the account, including names and links. Compass lists the chosen folder and its subfolders. File contents open in Drive.</p>
+<form id="drive-setup"><label>OAuth client ID<input name="clientId" required autocomplete="off" placeholder="….apps.googleusercontent.com"></label><label>Study folder link<input name="folder" required placeholder="https://drive.google.com/drive/folders/…"></label><button>Save setup</button></form>
+<p><a href="drive-setup.html" target="_blank" rel="noopener">Setup instructions</a></p></details>
+<div class="actions"><button id="drive-connect" disabled>Connect Google Drive</button><button id="drive-refresh" disabled>Refresh files</button><button id="drive-up" disabled>Parent folder</button><button id="drive-disconnect" disabled>Disconnect</button></div>
+<p id="drive-status" role="status">Complete Google Drive setup, then connect. Reconnect after reloading the page.</p>
+<div id="drive-files"></div>
+<h3>Ask ChatGPT</h3><label>Study question<input id="study-question" placeholder="Help me review these notes in 30 minutes"></label>
+<p>Build a request with open coursework and selected file links, then review it before copying. ChatGPT uses its own Drive connection to read the selected sources.</p>
+<div class="actions"><button id="build-request">Build study request</button><button id="copy-request">Copy request</button><a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">Open ChatGPT</a></div>
+<label>Request to review<textarea id="study-request" rows="9"></textarea></label>
+</section>
 <section><h2>Backup</h2><p>Export a copy before clearing browser data or switching devices.</p><button id="export">Export JSON</button> <label class="file">Import JSON <input type="file" id="import" accept=".json,application/json"></label></section>
 <p id="message" role="status"></p></main></body></html>

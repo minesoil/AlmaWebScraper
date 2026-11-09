@@ -27,3 +27,7 @@ section {margin:1rem 0;padding:.6rem 0}
 summary {cursor:pointer;padding:.8rem 0}
 :focus-visible {outline:3px solid #b66b26;outline-offset:3px}
 article label {display:block}
+
+textarea {font:inherit;width:100%;box-sizing:border-box;padding:.7rem}
+#drive-files {max-height:22rem;overflow:auto}
+#study-hub .actions {margin-top:.7rem;align-items:center}

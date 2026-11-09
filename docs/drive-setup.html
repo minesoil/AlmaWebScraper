@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Compass · Drive setup</title><link rel="stylesheet" href="style.css"></head><body><main>
+<a href="./">Back to Compass</a><h1>Connect a study folder</h1>
+<p>Google Cloud setup is required once for this website. Keep the study folder private.</p>
+<ol>
+<li>Open <a href="https://console.cloud.google.com/" target="_blank" rel="noopener">Google Cloud Console</a> and create or select a project.</li>
+<li>Enable the Google Drive API in that project.</li>
+<li>In Google Auth Platform, configure the app name, contact information and audience. For personal testing with an external audience, add the Google account that owns or can read the hub as a test user.</li>
+<li>Add the scope <code>https://www.googleapis.com/auth/drive.metadata.readonly</code> in Data Access. This allows metadata access across the account. Compass uses it to browse the chosen study folder and its subfolders.</li>
+<li>Create an OAuth client of type <strong>Web application</strong>. Add <code>https://minesoil.github.io</code> as an authorized JavaScript origin. For local development, also add <code>http://localhost:8000</code>. Origins have no repository path. The browser token flow uses a popup.</li>
+<li>Copy the client ID ending in <code>.apps.googleusercontent.com</code> into Google Drive setup in Compass. Also paste the private study hub folder link. Click <strong>Save setup</strong>, then <strong>Connect Google Drive</strong>.</li>
+<li>Choose the account with access to the hub and review Google's consent screen. Browse course folders and select files to include in a study request.</li>
+</ol>
+<p>The client ID identifies the app and can be entered in Compass. Any client secret stays outside the website. Access tokens stay in memory and expire. Reloading requires reconnection. Disconnect clears the session and revokes the current grant. To remove a grant separately, use the connected-app settings in the Google account.</p>
+<p>Setup is stored in this browser, separately from assignment backups. File names and selections stay in memory. The app reads metadata and opens source files in Drive. Automatic file-content ingestion and cloud backup are future work.</p>
+<h2>Use the existing ChatGPT connection</h2>
+<p>Enter a question, select source files and build a study request. Review the text, copy it, and paste it into ChatGPT. This transfers only the reviewed text when pasted. ChatGPT must open the selected sources through its own Drive connection before answering from their contents.</p>
+<p><a href="https://developers.google.com/identity/oauth2/web/guides/use-token-model">Google token flow documentation</a> · <a href="https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid">Client setup documentation</a> · <a href="https://developers.google.com/workspace/drive/api/guides/api-specific-auth">Drive permission scopes</a></p>
+</main></body></html>

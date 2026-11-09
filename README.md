@@ -50,3 +50,12 @@ Each assignment can include estimated minutes and a concrete first step. Older r
 “What fits now?” accepts 1–480 minutes. Suggestions consider unfinished assignments with estimates, ordered by due date, then shorter estimates and stable IDs. The selection includes each whole assignment that fits the remaining time. An earlier long assignment may be skipped when it cannot fit. Checkboxes allow manual changes, with an over-budget message when needed. Selections are temporary and can be regenerated after a reload.
 
 Checks covered previous backup records, invalid estimates, completed work, missing estimates, deadline order, daily and weekly boundaries, and budget limits from 1–90 minutes. Full browser testing remains pending. The time estimates are user-entered. Learning from actual session durations is a future experiment.
+
+## Private Drive and study requests
+I chose live access to my existing Drive hub and a workflow using my existing ChatGPT account.
+
+Drive setup uses a Google OAuth web client ID, supplied through the browser, and a study folder link. See docs/drive-setup.html for the setup steps. The requested drive.metadata.readonly scope grants account-wide metadata access. The UI browses the configured folder and its subfolders, with pagination and refresh. File contents open in Drive. Tokens stay in memory and are cleared on reload or Disconnect. Settings remain local and separate from assignment exports. Private hub IDs, titles and source contents stay outside the repository.
+
+The study request builder combines open assignments with selected source names and links. Review and edit the text, then copy and paste into ChatGPT. This is a handoff using the existing ChatGPT Drive connection. An assistant running inside Compass would require a separate authenticated server and API billing.
+
+Verification covers folder ID parsing, rejection of unrelated URLs, request generation and module syntax. Live OAuth sign-in and browser interaction remain pending until a client ID is configured.

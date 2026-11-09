@@ -1,3 +1,4 @@
+import {initStudyHub} from './study-hub.js';
 import {validate, unpack, schoolDate, courseSummaries, matchesFilters, suggestWork} from './records.js';
 
 const key = 'compass.coursework.v1';
@@ -192,3 +193,5 @@ document.querySelector('#suggest').onsubmit = event => {
 document.querySelector('#budget').oninput = () => {
   try { renderPlan(read()); } catch (error) { message.textContent = error.message; }
 };
+
+initStudyHub(read);
