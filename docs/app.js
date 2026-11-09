@@ -1,4 +1,4 @@
-import {validate, unpack} from './records.js';
+import {validate, unpack, schoolDate, courseSummaries, matchesFilters} from './records.js';
 
 const key = 'compass.coursework.v1';
 const form = document.querySelector('#entry');
@@ -15,14 +15,35 @@ function encode(records) {
 function render(records) {
   const list = document.querySelector('#records');
   list.replaceChildren();
-  if (!records.length) list.textContent = 'I haven’t added any assignments yet.';
+  const courseFilter = document.querySelector('#course-filter');
+  const selected = courseFilter.value;
+  courseFilter.replaceChildren(new Option('All courses', ''));
+  for (const course of [...new Set(records.map(item => item.course))].sort()) {
+    courseFilter.add(new Option(course, course));
+  }
+  courseFilter.value = selected;
+  const today = schoolDate();
+  const open = records.filter(item => !item.done);
+  const overdue = open.filter(item => item.due && item.due < today);
+  document.querySelector('#overview').textContent = open.length + ' open · ' + overdue.length + ' overdue · ' + records.filter(item => item.done).length + ' complete';
+  const summaries = document.querySelector('#courses');
+  summaries.replaceChildren();
+  for (const summary of courseSummaries(records)) {
+    const line = document.createElement('p');
+    line.textContent = summary.course + ' — ' + summary.open + ' open · ' + summary.graded + ' graded' +
+      (summary.graded ? ' · score range ' + summary.low + '–' + summary.high + '%' : '');
+    summaries.append(line);
+  }
+  const filters = {course:courseFilter.value, work:document.querySelector('#work-filter').value, query:document.querySelector('#search').value};
+  records = records.filter(item => matchesFilters(item, filters, today));
+  if (!records.length) list.textContent = 'No assignments to show.';
   for (const item of records.sort((a,b)=>(a.due || 'z').localeCompare(b.due || 'z'))) {
     const row = document.createElement('article');
     const title = document.createElement('strong');
     title.textContent = item.title;
     const detail = document.createElement('small');
     const grade = item.status === 'Graded' ? item.score + '%' : item.status;
-    detail.textContent = [item.course, item.due || 'No due date', grade, item.done ? 'Complete' : 'Open', item.source].join(' · ');
+    detail.textContent = [item.course, item.due ? item.due + (!item.done && item.due < today ? ' · Overdue' : '') : 'No due date', grade, item.done ? 'Complete' : 'Open', item.source].join(' · ');
     title.append(detail);
     const edit = document.createElement('button');
     edit.textContent = 'Edit';
@@ -31,10 +52,32 @@ function render(records) {
       for (const name of ['title','course','due','status','score']) fields[name].value = item[name] ?? '';
       fields.done.checked = item.done;
       fields.score.disabled = item.status !== 'Graded';
-      document.querySelector('#editor').textContent = 'Edit my assignment';
+      fields.score.required = !fields.score.disabled;
+      document.querySelector('#editor').textContent = 'Edit assignment';
       fields.title.focus();
     };
-    row.append(title, edit);
+    const actions = document.createElement('div');
+    actions.className = 'actions';
+    const toggle = document.createElement('button');
+    toggle.textContent = item.done ? 'Reopen' : 'Complete';
+    toggle.onclick = () => {
+      try {
+        save(read().map(record => record.id === item.id ? {...record, done:!record.done} : record));
+        message.textContent = item.done ? 'Assignment reopened.' : 'Assignment completed.';
+      } catch (error) { message.textContent = error.message; }
+    };
+    const remove = document.createElement('button');
+    remove.textContent = 'Delete';
+    remove.onclick = () => {
+      if (!confirm('Delete “' + item.title + '”?')) return;
+      try {
+        save(read().filter(record => record.id !== item.id));
+        if (editing === item.id) form.reset();
+        message.textContent = 'Assignment deleted.';
+      } catch (error) { message.textContent = error.message; }
+    };
+    actions.append(toggle, edit, remove);
+    row.append(title, actions);
     list.append(row);
   }
 }
@@ -48,7 +91,8 @@ function save(records) {
 form.onreset = () => {
   editing = null;
   fields.score.disabled = true;
-  document.querySelector('#editor').textContent = 'Add my assignment';
+  fields.score.required = false;
+  document.querySelector('#editor').textContent = 'Add assignment';
 };
 fields.status.onchange = () => {
   fields.score.disabled = fields.status.value !== 'Graded';
@@ -64,7 +108,7 @@ form.onsubmit = event => {
       status:fields.status.value, score:fields.score.disabled ? null : fields.score.valueAsNumber, done:fields.done.checked});
     save([...records.filter(row => row.id !== item.id), item]);
     form.reset();
-    message.textContent = 'My assignment is saved on this device.';
+    message.textContent = 'Assignment saved.';
   } catch (error) { message.textContent = error.message; }
 };
 document.querySelector('#export').onclick = () => {
@@ -80,6 +124,7 @@ document.querySelector('#export').onclick = () => {
 document.querySelector('#import').onchange = async event => {
   const input = event.target;
   try {
+    if (!input.files.length) return;
     const incoming = unpack(await input.files[0].text());
     const records = read();
     const seen = new Set(records.map(item => item.id));
@@ -88,11 +133,14 @@ document.querySelector('#import').onchange = async event => {
       seen.add(item.id);
       return true;
     });
-    if (added.length && !confirm('Add ' + added.length + ' assignments to my coursework?')) return;
+    if (added.length && !confirm('Add ' + added.length + ' assignments from this backup?')) return;
     save([...records,...added]);
-    message.textContent =  'My import added ' + added.length + ' records and skipped ' + (incoming.length-added.length) + ' existing IDs.';
+    message.textContent =  'Imported ' + added.length + ' records and skipped ' + (incoming.length-added.length) + ' existing IDs.';
   } catch (error) { message.textContent = error.message; }
   finally { input.value = ''; }
 };
+for (const id of ['course-filter', 'work-filter', 'search']) {
+  document.getElementById(id).addEventListener('input', refresh);
+}
 window.addEventListener('storage', refresh);
 refresh();

@@ -15,3 +15,7 @@ input,select,button {font:inherit;padding:.55rem;border:1px solid #879b91;border
 button {cursor:pointer;background:#174d46;color:white}
 button[type=reset],article button {background:transparent;color:#174d46}
 #message {position:sticky;bottom:0;background:#f7f6ef;font-weight:bold;padding:.5rem}
+
+.filters {display:grid;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));gap:1rem;margin-bottom:1rem}
+.actions {display:flex;flex-wrap:wrap;gap:.4rem}
+@media(max-width:600px) {article {grid-template-columns:1fr}.actions button {min-height:44px}}

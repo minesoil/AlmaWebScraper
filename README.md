@@ -1,30 +1,41 @@
 # Compass
-I use Compass to keep my assignments, deadlines and individual scores in one place. I edit in one browser tab and export a JSON backup when I want to move my records to another device.
+A coursework dashboard for assignments, deadlines and individual scores. Records are saved in browser storage on the current device. Export a JSON backup before switching devices or clearing site data.
 
-## How I run it
-I run `python3 -m http.server 8000` from the repository root and open http://localhost:8000/docs/. I can edit the site without installing dependencies or running a build.
+## Run locally
+Run `python3 -m http.server 8000` from the repository root, then open http://localhost:8000/docs/. No build step is required.
 
-## How I publish it
-In GitHub Settings → Pages, I choose **Deploy from a branch**, select **main** and **/docs**, and save. I use the URL GitHub provides after deployment. I keep my personal backups outside this repository and commit only source files and fictional examples.
+## Publish
+In Settings → Pages, choose **Deploy from a branch**, **main**, and **/docs**. If Pages publishes the repository root, the root index redirects to the dashboard.
 
-## Where I make changes
-- I edit the form and its labels in `docs/index.html`.
-- I adjust typography, spacing and mobile layout in `docs/style.css`.
-- I edit the assignment list, browser storage and import/export behavior in `docs/app.js`.
-- I change record validation in `docs/records.js`.
-- I can import `docs/example.json` twice to check how Compass handles duplicate IDs.
+## Available tools
+- Filter by course or completion status, search assignments, and find overdue work.
+- Review open, overdue and completed counts across all courses.
+- See each course’s open work, number of graded records and recorded score range.
+- Add and correct assignments, mark work complete, reopen it or confirm deletion.
+- Export JSON and import a backup. Existing IDs keep their current records.
 
-I enter school dates as YYYY-MM-DD in Taipei local time. I can record a graded zero. For missing, excused or ungraded work, I leave the score empty. I mark work complete separately from its grade.
+The course overview reports individual scores. A course average requires a verified grading policy. Overdue means an unfinished assignment whose due date is earlier than today in Asia/Taipei. Work due today stays open.
 
-When I import a backup, Compass checks every record before saving and preserves the source label. If an ID already exists, I keep the current entry and use Edit to correct it. I export before clearing site data because that would erase my log. Other apps on the same origin can access this browser storage.
+## Editing
+| File | Purpose |
+| --- | --- |
+| docs/index.html | Form and section layout |
+| docs/style.css | Typography and responsive layout |
+| docs/app.js | Rendering, controls, storage and imports |
+| docs/records.js | Validation, date handling, filters and summaries |
+| docs/example.json | Fictional records for trying imports |
 
-## My engineering journal · 9 November 2026
-I proposed Compass and chose GitHub Pages. I can edit the first release as plain browser modules. My original blueprint considered React, TypeScript and SQLite. I can revisit those choices when I need a planner or multi-device access.
+Graded zeros remain numeric. Missing, excused and ungraded work have null scores. Completion is independent of grade status. The backup format remains version 1, so earlier exports remain usable. Keep personal backups outside this public repository. Edit from one tab at a time.
 
-I want to find a due date or correct a score as soon as I open the dashboard. That’s why my assignments appear first. I keep validation in one module so I can follow what happens to a record before it’s saved.
+## Engineering journal · 9 November 2026
+I proposed Compass and chose GitHub Pages so I could edit and publish a small static site. I initially considered React and SQLite. Plain browser modules are enough for the current coursework log.
 
-Design reference: https://www.gov.uk/guidance/government-design-principles
-Code review reference: https://google.github.io/eng-practices/review/reviewer/looking-for.html
+I reduced repeated first-person wording in labels and status messages. I kept first person in this journal to describe project decisions.
 
-## What I’ll do next
-I’ll verify one course grading policy and work through an example by hand before adding course averages. I’ll need a permitted data source for Alma. For now I keep documentation and release files in Drive. I’ve left automatic backups, scheduling and a study assistant for later milestones.
+The latest checks cover Taipei midnight, overdue boundaries, combined course/search filters, graded zeros and exclusion of ungraded records from score ranges. Browser interaction checks are still pending.
+
+## Next milestone
+I’ll verify one course grading policy and work through a sample by hand before adding course averages. I’ll establish a permitted data source before implementing Alma ingestion.
+
+Design reference — https://www.gov.uk/guidance/government-design-principles
+Code review reference — https://google.github.io/eng-practices/review/reviewer/looking-for.html

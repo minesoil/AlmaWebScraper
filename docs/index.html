@@ -1,13 +1,14 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Compass · Coursework</title><link rel="stylesheet" href="style.css"><script type="module" src="app.js"></script></head>
-<body><header>Compass <span>My workspace</span></header><main>
-<h1>My coursework</h1><p>I track assignments and scores on this device. I use Taipei school dates.</p>
-<section><h2>My assignments</h2><div id="records"></div></section>
-<section><h2 id="editor">Add my assignment</h2><form id="entry">
+<body><header>Compass <span>Coursework</span></header><main>
+<h1>Coursework</h1><p>Assignments, deadlines and scores. Saved on this device.</p>
+<section><h2>Overview</h2><p id="overview"></p><div id="courses"></div></section>
+<section><h2>Assignments</h2><div class="filters"><label>Course<select id="course-filter"><option value="">All courses</option></select></label><label>Show<select id="work-filter"><option value="all">All work</option><option value="open">Open</option><option value="overdue">Overdue</option><option value="done">Complete</option></select></label><label>Search<input id="search" type="search" placeholder="Assignment or course"></label></div><div id="records"></div></section>
+<section><h2 id="editor">Add assignment</h2><form id="entry">
 <label>Course<input name="course" required></label><label>Assignment<input name="title" required></label><label>Due date<input type="date" name="due"></label>
 <label>Grade status<select name="status"><option>Ungraded</option><option>Graded</option><option>Missing</option><option>Excused</option></select></label>
 <label>Score (%)<input name="score" type="number" min="0" max="100" step="any" disabled></label>
-<label><input type="checkbox" name="done"> I finished this work</label>
+<label><input type="checkbox" name="done"> Work complete</label>
 <button>Save assignment</button><button type="reset">Clear form</button></form></section>
-<section><h2>My backup</h2><p>I export a copy before clearing my browser data. When I import a backup, I keep existing entries and add records with new IDs.</p><button id="export">Export JSON</button> <label class="file">Import JSON <input type="file" id="import" accept=".json,application/json"></label></section>
+<section><h2>Backup</h2><p>Export a copy before clearing browser data or switching devices.</p><button id="export">Export JSON</button> <label class="file">Import JSON <input type="file" id="import" accept=".json,application/json"></label></section>
 <p id="message" role="status"></p></main></body></html>
